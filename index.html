@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Nstaratus delivers high-converting Facebook ad campaigns for the home improvement industry.">
+    <title>Nstaratus | The New Atmosphere of Growth</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="favicon.png.png">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Space+Grotesk:wght@400;600&display=swap" rel="stylesheet">
+    
+    <!-- Animation Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles-slim@2.0.6/tsparticles.slim.bundle.min.js"></script>
+
+    <style>
+        :root {
+            --navy: #061121;
+            --navy-light: #0d2b52;
+            --cyan: #5ce1e6;
+            --cyan-glow: rgba(92, 225, 230, 0.5);
+            --white: #ffffff;
+            --text-gray: #b3c2d1;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; /* Custom cursor override */ }
+        
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: var(--navy);
+            color: var(--white);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, .logo-title { font-family: 'Montserrat', sans-serif; }
+
+        /* Custom Invert Cursor */
+        .cursor {
+            position: fixed; top: 0; left: 0;
+            width: 20px; height: 20px;
+            background: var(--white);
+            border-radius: 50%;
+            pointer-events: none; z-index: 9999;
+            transform: translate(-50%, -50%);
+            mix-blend-mode: difference;
+            transition: width 0.3s, height 0.3s;
+        }
+        .cursor.active { width: 80px; height: 80px; }
+
+        /* Preloader */
+        #loader {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: var(--navy); z-index: 10000;
+            display: flex; justify-content: center; align-items: center;
+            flex-direction: column;
+        }
+        .loader-text {
+            font-size: 3rem; font-weight: 900; color: transparent;
+            -webkit-text-stroke: 2px var(--cyan);
+            letter-spacing: 10px;
+        }
+        .loader-bar {
+            width: 0%; height: 2px; background: var(--cyan);
+            margin-top: 20px; box-shadow: 0 0 15px var(--cyan);
+        }
+
+        /* Navigation */
+        header {
+            position: fixed; top: 0; width: 100%; z-index: 100;
+            padding: 20px 5%; display: flex; justify-content: space-between; align-items: center;
+            background: rgba(6, 17, 33, 0.8); backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(92, 225, 230, 0.1);
+        }
+        .logo-title { font-size: 28px; font-weight: 900; color: var(--cyan); letter-spacing: 2px; }
+        .logo-tagline { font-size: 11px; font-weight: 700; color: var(--text-gray); text-transform: uppercase; letter-spacing: 1.5px; }
+        nav a {
+            color: var(--white); text-decoration: none; margin-left: 40px;
+            font-size: 0.9rem; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 1px; transition: color 0.3s;
+        }
+        nav a:hover { color: var(--cyan); }
+
+        /* Typography & Utilities */
+        .gradient-text {
+            background: linear-gradient(to right, var(--cyan), #ffffff);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .section-title { font-size: 4rem; font-weight: 900; margin-bottom: 30px; text-transform: uppercase; line-height: 1; }
+
+        /* Sections */
+        section { padding: 150px 5%; position: relative; }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh; display: flex; align-items: center; justify-content: center;
+            background: url('https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover fixed;
+            position: relative;
+        }
+        .hero::before {
+            content: ''; position: absolute; inset: 0;
+            background: radial-gradient(circle at center, rgba(6, 17, 33, 0.6) 0%, rgba(6, 17, 33, 0.95) 100%);
+        }
+        #tsparticles { position: absolute; inset: 0; z-index: 1; }
+        .hero-content { position: relative; z-index: 2; text-align: center; max-width: 1100px; }
+        .hero h1 { font-size: 5vw; line-height: 1.1; margin-bottom: 20px; text-transform: uppercase; }
+
+        /* About Section */
+        .about {
+            background: linear-gradient(rgba(6, 17, 33, 0.95), rgba(6, 17, 33, 0.98)), url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover fixed;
+            display: flex; align-items: center; justify-content: center; text-align: center;
+        }
+        .about p { font-size: 1.8rem; color: var(--text-gray); max-width: 1000px; font-weight: 400; line-height: 1.6; }
+
+        /* Process Section */
+        .process { background-color: var(--navy); overflow: hidden; }
+        .process-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; max-width: 1400px; margin: 80px auto 0; }
+        
+        .process-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 50px 40px; border-radius: 20px;
+            position: relative; backdrop-filter: blur(10px);
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .process-card::before {
+            content: ''; position: absolute; inset: -1px; border-radius: 20px;
+            background: linear-gradient(45deg, transparent, var(--cyan), transparent);
+            z-index: -1; opacity: 0; transition: opacity 0.5s;
+        }
+        .process-card:hover { transform: translateY(-15px); }
+        .process-card:hover::before { opacity: 1; animation: borderGlow 2s linear infinite; }
+        
+        .step-num {
+            font-size: 5rem; font-weight: 900; color: transparent;
+            -webkit-text-stroke: 1px rgba(255,255,255,0.2);
+            position: absolute; top: 10px; right: 20px;
+            transition: all 0.5s;
+        }
+        .process-card:hover .step-num { color: var(--cyan); -webkit-text-stroke: 0px; text-shadow: 0 0 20px var(--cyan); }
+        
+        .process-card h3 { font-size: 1.8rem; margin-bottom: 20px; margin-top: 30px; color: var(--white); }
+        .process-card p { color: var(--text-gray); font-size: 1.1rem; }
+
+        /* Offer Section (B2B Direct Response) */
+        .offer { 
+            background: linear-gradient(rgba(13, 43, 82, 0.9), rgba(6, 17, 33, 0.95)), url('https://images.unsplash.com/photo-1621905251189-08b45d6a269e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover fixed; 
+        }
+        .offer-container { max-width: 1400px; margin: 0 auto; position: relative; z-index: 2; }
+        .offer-subtitle { font-size: 1.6rem; color: var(--text-gray); margin-bottom: 60px; max-width: 900px; line-height: 1.6; }
+        .offer-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 60px; align-items: stretch; }
+        
+        .offer-bullets { display: flex; flex-direction: column; gap: 40px; }
+        .bullet-item { display: flex; align-items: flex-start; gap: 25px; }
+        .bullet-icon { font-size: 2.5rem; font-family: 'Montserrat', sans-serif; font-weight: 900; line-height: 1; }
+        .bullet-text h4 { font-size: 1.6rem; margin-bottom: 10px; color: var(--white); font-family: 'Space Grotesk', sans-serif; font-weight: 600; text-transform: none; }
+        .bullet-text p { font-size: 1.1rem; color: var(--text-gray); line-height: 1.6; }
+
+        .offer-objection { 
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); 
+            padding: 50px; border-radius: 20px; backdrop-filter: blur(10px);
+            display: flex; flex-direction: column; justify-content: center;
+        }
+        .offer-objection h3 { font-size: 2.2rem; margin-bottom: 20px; font-family: 'Montserrat', sans-serif; font-weight: 900; text-transform: uppercase; }
+        .offer-objection p { font-size: 1.15rem; color: var(--text-gray); line-height: 1.8; }
+
+        /* Contact Section */
+        .contact {
+            background: linear-gradient(rgba(6, 17, 33, 0.95), rgba(6, 17, 33, 0.99)), url('https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover fixed;
+            text-align: center; min-height: 80vh; display: flex; flex-direction: column; justify-content: center;
+        }
+        .contact h2 { font-size: 3rem; max-width: 900px; margin: 0 auto 50px; text-transform: none; line-height: 1.3;}
+        .contact-email {
+            font-size: 4rem; font-weight: 900; color: var(--white); text-decoration: none;
+            position: relative; display: inline-block; padding: 0 20px;
+        }
+        .contact-email::before {
+            content: ''; position: absolute; bottom: 10px; left: 0; width: 100%; height: 30%;
+            background: var(--cyan); z-index: -1; transform: scaleY(0.2); transform-origin: bottom;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .contact-email:hover::before { transform: scaleY(1); }
+
+        .socials { margin-top: 60px; }
+        .magnetic-btn {
+            display: inline-flex; justify-content: center; align-items: center;
+            width: 100px; height: 100px; background: rgba(255,255,255,0.05);
+            border-radius: 50%; border: 1px solid rgba(255,255,255,0.1);
+            transition: background 0.3s; position: relative;
+        }
+        .magnetic-btn:hover { background: var(--cyan); border-color: var(--cyan); box-shadow: 0 0 30px var(--cyan-glow); }
+        .magnetic-btn svg { width: 40px; height: 40px; fill: var(--white); pointer-events: none; }
+
+        @keyframes borderGlow { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+
+        /* Mobile */
+        @media (max-width: 1024px) {
+            .process-grid, .offer-grid { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 3rem; }
+            .contact-email { font-size: 2rem; }
+            * { cursor: auto !important; }
+            .cursor { display: none; }
+            nav { display: none; }
+            .offer-subtitle { font-size: 1.3rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Intro Loader -->
+    <div id="loader">
+        <div class="loader-text">NSTARATUS</div>
+        <div class="loader-bar"></div>
+    </div>
+
+    <!-- Custom Cursor -->
+    <div class="cursor"></div>
+
+    <header class="gsap-header">
+        <div class="logo-container">
+            <div class="logo-title">NSTARATUS</div>
+            <div class="logo-tagline">The New Atmosphere of Growth.</div>
+        </div>
+        <nav>
+            <a href="#about" class="hover-target">About</a>
+            <a href="#process" class="hover-target">Process</a>
+            <a href="#offer" class="hover-target">Offer</a>
+            <a href="#contact" class="hover-target">Contact</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div id="tsparticles"></div>
+        <div class="hero-content">
+            <h1 class="gsap-hero">Scaling home improvement businesses with <span class="gradient-text">high-converting</span> Facebook campaigns.</h1>
+        </div>
+    </section>
+
+    <section id="about" class="about">
+        <div style="position: relative; z-index: 2;">
+            <h2 class="section-title gsap-about-title">Who Are <span class="gradient-text">We</span>?</h2>
+            <p class="gsap-about-text">Nstaratus is a specialized digital growth agency dedicated entirely to the home improvement sector. We engineer highly targeted Facebook advertising campaigns designed to bypass tire-kickers and connect you directly with homeowners actively seeking your craftsmanship. We handle the digital heavy lifting so you can focus on what you do best: building and transforming spaces.</p>
+        </div>
+    </section>
+
+    <section id="process" class="process">
+        <h2 class="section-title gsap-process-title" style="text-align: center;">Our <span class="gradient-text">Process</span></h2>
+        <div class="process-grid">
+            <div class="process-card gsap-card">
+                <div class="step-num">01</div>
+                <h3>Discovery & Strategy</h3>
+                <p>We analyze your local market, ideal customer, and portfolio to craft a bespoke advertising angle that highlights your unique craftsmanship.</p>
+            </div>
+            <div class="process-card gsap-card">
+                <div class="step-num">02</div>
+                <h3>Campaign Deployment</h3>
+                <p>Using proven ad creatives and advanced targeting, we launch campaigns engineered to capture high-intent homeowners in your area.</p>
+            </div>
+            <div class="process-card gsap-card">
+                <div class="step-num">03</div>
+                <h3>Lead Delivery</h3>
+                <p>We filter out the noise and deliver exclusive, pre-qualified leads directly to your inbox. Homeowners genuinely interested and ready for a quote.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="offer" class="offer">
+        <div class="offer-container">
+            <h2 class="section-title gsap-offer-title">The <span class="gradient-text">Zero-Risk</span> Offer</h2>
+            <p class="offer-subtitle gsap-offer">We will build and manage your high-converting Facebook Ad campaigns for 14 days completely free—you just cover the ad spend, and we'll prove our value with booked jobs.</p>
+            
+            <div class="offer-grid">
+                <div class="offer-bullets">
+                    <div class="bullet-item gsap-offer">
+                        <span class="gradient-text bullet-icon">01</span>
+                        <div class="bullet-text">
+                            <h4>You Provide The Proof</h4>
+                            <p>Share photos, videos, and behind-the-scenes footage of your past projects for us to use in high-converting ad creatives.</p>
+                        </div>
+                    </div>
+                    <div class="bullet-item gsap-offer">
+                        <span class="gradient-text bullet-icon">02</span>
+                        <div class="bullet-text">
+                            <h4>We Build The Engine</h4>
+                            <p>We handle 100% of the campaign setup, precise targeting, ad creation, and daily optimization completely free during the trial.</p>
+                        </div>
+                    </div>
+                    <div class="bullet-item gsap-offer">
+                        <span class="gradient-text bullet-icon">03</span>
+                        <div class="bullet-text">
+                            <h4>You Fuel The Ads</h4>
+                            <p>You pay directly to Facebook for the daily ad spend while we actively prove our worth and generate tangible, booked leads.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="offer-objection gsap-offer">
+                    <h3>Why is it <span class="gradient-text">Free?</span></h3>
+                    <p>Because we believe in proving our worth before asking for a dime. This zero-risk "proof of concept" allows us to demonstrate undeniable ROI. We aren't looking for a quick payout; we are looking to build a long-term, highly profitable partnership based on actual results.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact">
+        <div style="position: relative; z-index: 2;">
+            <h2 class="gsap-contact">Want more booked home improvement jobs? Email us and we'll show you how our Facebook ads can help</h2>
+            
+            <div class="gsap-contact">
+                <h3 style="font-size: 1.2rem; margin-bottom: 10px; color: var(--text-gray); font-weight: 400; text-transform: uppercase; letter-spacing: 2px;">To know more, email us at</h3>
+                <a href="mailto:info@nstaratus.com" class="contact-email hover-target">info@nstaratus.com</a>
+            </div>
+
+            <div class="socials gsap-contact">
+                <!-- Magnetic Button -->
+                <a href="https://www.instagram.com/nstaratus" target="_blank" class="magnetic-btn hover-target">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // 1. Loader Animation
+        const tlLoader = gsap.timeline();
+        tlLoader.to('.loader-bar', { width: '100%', duration: 1.5, ease: 'power3.inOut' })
+                .to('#loader', { yPercent: -100, duration: 1, ease: 'power4.inOut', delay: 0.2 })
+                .from('.gsap-header', { y: -50, opacity: 0, duration: 1, ease: 'power3.out' }, "-=0.5")
+                .from('.gsap-hero', { y: 100, opacity: 0, duration: 1.5, ease: 'power4.out', skewY: 5 }, "-=0.8");
+
+        // 2. Custom Cursor Logic
+        const cursor = document.querySelector('.cursor');
+        const hoverTargets = document.querySelectorAll('.hover-target');
+
+        window.addEventListener('mousemove', (e) => {
+            gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1, ease: "power2.out" });
+        });
+
+        hoverTargets.forEach(target => {
+            target.addEventListener('mouseenter', () => cursor.classList.add('active'));
+            target.addEventListener('mouseleave', () => cursor.classList.remove('active'));
+        });
+
+        // 3. Magnetic Button Logic
+        const magneticBtns = document.querySelectorAll('.magnetic-btn');
+        magneticBtns.forEach(btn => {
+            btn.addEventListener('mousemove', (e) => {
+                const rect = btn.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                gsap.to(btn, { duration: 0.3, x: x * 0.4, y: y * 0.4, ease: "power2.out" });
+            });
+            btn.addEventListener('mouseleave', () => {
+                gsap.to(btn, { duration: 0.5, x: 0, y: 0, ease: "elastic.out(1, 0.3)" });
+            });
+        });
+
+        // 4. GSAP ScrollTrigger Animations
+        gsap.registerPlugin(ScrollTrigger);
+
+        gsap.from('.gsap-about-title', {
+            scrollTrigger: { trigger: '.about', start: 'top 80%' },
+            y: 50, opacity: 0, duration: 1, ease: 'power3.out'
+        });
+
+        gsap.from('.gsap-about-text', {
+            scrollTrigger: { trigger: '.about', start: 'top 70%' },
+            y: 30, opacity: 0, duration: 1, delay: 0.2, ease: 'power3.out'
+        });
+
+        gsap.from('.gsap-process-title', {
+            scrollTrigger: { trigger: '.process', start: 'top 80%' },
+            opacity: 0, scale: 0.8, duration: 1, ease: 'back.out(1.7)'
+        });
+
+        gsap.from('.gsap-card', {
+            scrollTrigger: { trigger: '.process-grid', start: 'top 75%' },
+            y: 100, opacity: 0, duration: 0.8, stagger: 0.2, ease: 'power3.out'
+        });
+
+        // Offer Animations
+        gsap.from('.gsap-offer-title', {
+            scrollTrigger: { trigger: '.offer', start: 'top 80%' },
+            y: 50, opacity: 0, duration: 1, ease: 'power3.out'
+        });
+
+        gsap.from('.gsap-offer', {
+            scrollTrigger: { trigger: '.offer-grid', start: 'top 75%' },
+            y: 50, opacity: 0, duration: 1, stagger: 0.2, ease: "power3.out"
+        });
+
+        gsap.from('.gsap-contact', {
+            scrollTrigger: { trigger: '.contact', start: 'top 70%' },
+            y: 50, opacity: 0, duration: 1, stagger: 0.3, ease: 'power3.out'
+        });
+
+        // 5. tsParticles Interactive Background
+        tsParticles.load("tsparticles", {
+            fpsLimit: 60,
+            interactivity: {
+                events: { onHover: { enable: true, mode: "grab" }, resize: true },
+                modes: { grab: { distance: 200, links: { opacity: 0.5 } } }
+            },
+            particles: {
+                color: { value: "#5ce1e6" },
+                links: { color: "#5ce1e6", distance: 150, enable: true, opacity: 0.2, width: 1 },
+                move: { enable: true, speed: 1, direction: "none", random: false, straight: false, outModes: "out" },
+                number: { density: { enable: true, area: 800 }, value: 60 },
+                opacity: { value: 0.3 },
+                shape: { type: "circle" },
+                size: { value: { min: 1, max: 3 } }
+            },
+            detectRetina: true
+        });
+    </script>
+</body>
+</html>
